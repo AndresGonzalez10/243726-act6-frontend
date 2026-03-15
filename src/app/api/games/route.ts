@@ -5,15 +5,16 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const searchQuery = searchParams.get('search') || '';
   const apiKey = process.env.RAWG_API_KEY;
+  const baseUrl = process.env.RAWG_BASE_URL;
 
-  if (!apiKey) {
-    return NextResponse.json({ error: 'API Key no configurada en el servidor' }, { status: 500 });
+  if (!apiKey || !baseUrl) {
+    return NextResponse.json({ error: 'Variables de entorno no configuradas correctamente' }, { status: 500 });
   }
 
   try {
     const url = searchQuery 
-      ? `https://api.rawg.io/api/games?key=${apiKey}&search=${searchQuery}`
-      : `https://api.rawg.io/api/games?key=${apiKey}`;
+      ? `${baseUrl}?key=${apiKey}&search=${searchQuery}`
+      : `${baseUrl}?key=${apiKey}`;
 
     const response = await axios.get(url);
     return NextResponse.json(response.data);
