@@ -44,7 +44,7 @@ export default function Home() {
       <div className="max-w-7xl mx-auto">
         
         <h1 className="text-5xl font-extrabold mb-10 text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-teal-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)] tracking-tight">
-          Mi Catálogo Gamer (SOA)
+          Gameflix
         </h1>
         <form onSubmit={handleSearch} className="mb-12 flex justify-center max-w-2xl mx-auto">
           <div className="relative flex w-full group">

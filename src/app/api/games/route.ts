@@ -4,7 +4,6 @@ import axios from 'axios';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const searchQuery = searchParams.get('search') || '';
-  
   const apiKey = process.env.RAWG_API_KEY;
 
   if (!apiKey) {
@@ -17,7 +16,6 @@ export async function GET(request: Request) {
       : `https://api.rawg.io/api/games?key=${apiKey}`;
 
     const response = await axios.get(url);
-    
     return NextResponse.json(response.data);
   } catch (error) {
     console.error("Error en el Proxy:", error);
