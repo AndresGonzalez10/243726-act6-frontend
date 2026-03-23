@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { fetchGamesService } from '../services/gamesService';
 
 interface Game {
   id: number;
@@ -14,15 +14,14 @@ export default function Home() {
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true); 
   const [error, setError] = useState<string | null>(null);  
-  
   const [searchTerm, setSearchTerm] = useState('');
 
-  const fetchGames = async (search: string = '') => {
+  const loadGames = async (search: string = '') => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`/api/games?search=${search}`);
-      setGames(response.data.results);
+      const results = await fetchGamesService(search);
+      setGames(results);
     } catch (err) {
       setError('Vaya, parece que los servidores están descansando. Intenta de nuevo más tarde.');
     } finally {
@@ -31,12 +30,12 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetchGames();
+    loadGames();
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchGames(searchTerm);
+    loadGames(searchTerm);
   };
 
   return (
@@ -46,6 +45,7 @@ export default function Home() {
         <h1 className="text-5xl font-extrabold mb-10 text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-teal-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)] tracking-tight">
           Gameflix
         </h1>
+
         <form onSubmit={handleSearch} className="mb-12 flex justify-center max-w-2xl mx-auto">
           <div className="relative flex w-full group">
             <input 
@@ -63,12 +63,14 @@ export default function Home() {
             </button>
           </div>
         </form>
+
         {error && (
           <div className="bg-red-900/40 border border-red-500/50 text-red-200 p-5 rounded-2xl text-center mb-10 max-w-2xl mx-auto backdrop-blur-sm flex items-center justify-center gap-3">
             <span className="text-2xl">⚠️</span>
             <p className="font-medium">{error}</p>
           </div>
         )}
+
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
